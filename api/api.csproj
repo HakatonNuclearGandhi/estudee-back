@@ -22,7 +22,6 @@
 
     <ItemGroup>
       <Folder Include="Mappings" />
-      <Folder Include="Models\DTO" />
       <Folder Include="Repositories" />
     </ItemGroup>
 
