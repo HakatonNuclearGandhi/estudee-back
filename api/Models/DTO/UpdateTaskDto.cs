@@ -7,5 +7,5 @@ public class UpdateTaskDto
     public int maxScore { get; set; }
     public int score { get; set; }
     public string statusId { get; set; }
-    public DateOnly deadline { get; set; }
+    public DateTime deadline { get; set; }
 }
