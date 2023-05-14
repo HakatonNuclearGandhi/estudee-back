@@ -1,4 +1,5 @@
 using api.Models.Domain;
+using api.Models.DTO;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Task = api.Models.Domain.Task;
 
@@ -12,7 +13,7 @@ public interface ITaskRepository
 
     Task<Models.Domain.Task>? DeleteAsync(Guid id);
 
-    Task<List<Models.Domain.Task>> GetAllAsync(User user);
+    Task<List<TaskResponseDto>> GetAllAsync(User user);
     
     Task<List<Models.Domain.Task>> GetOnWeekAsync();
 

@@ -31,7 +31,7 @@ public class TasksController : ControllerBase
         _mapper = mapper;
     }
     
-    //[Authorize]
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -47,8 +47,9 @@ public class TasksController : ControllerBase
         User user = await _userManager.FindByNameAsync(username);
         
         var tasksDom = await _taskRepository.GetAllAsync(user);
-        var tasksDto = _mapper.Map<List<TaskDto>>(tasksDom);
-        return Ok(tasksDto);
+        // var tasksDto = _mapper.Map<List<TaskResponseDto>>(tasksDom);
+        
+        return Ok(tasksDom);
     }
     
     //[Authorize]

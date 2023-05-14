@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using api.Data;
 using api.Models.Domain;
+using api.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 using Task = api.Models.Domain.Task;
 
@@ -43,17 +45,44 @@ public class SQLTaskRepository : ITaskRepository
         return exist;
     }
 
-    public async Task<List<Task>> GetAllAsync(User user)
+    public async Task<List<TaskResponseDto>> GetAllAsync(User user)
     {
         var tasks = _dbContext.Tasks.AsQueryable();
         List<Subject> listSub = await _dbContext.Subjects.Where(s => s.User == user).ToListAsync();
+        Debug.WriteLine("checj sosog \n\n\n");
+        for (int i = 0; i < listSub.Count; i++)
+        {
+            Debug.WriteLine(listSub[i]);
+        }
+        
         List<Task> tasksList = new();
         foreach (var sub in listSub)
         {
-            List<Task> tList = await _dbContext.Tasks.Where(t => t.statusId == sub.subjectId).ToListAsync();
+            List<Task> tList = await _dbContext.Tasks.Where(t => t.subjectId == sub.subjectId).ToListAsync();
             tasksList.AddRange(tList);
         }
-        return tasksList;
+
+        List<TaskResponseDto> taskResponseDtos = new List<TaskResponseDto>();
+        for (int i = 0; i < tasksList.Count; i++)
+        {
+            taskResponseDtos.Add(new TaskResponseDto()
+            {
+                subjectId = tasksList[i].subjectId,
+                subjectName = "test_name",
+                maxScore = tasksList[i].maxScore,
+                taskName = tasksList[i].taskName,
+                deadline = tasksList[i].deadLine,
+                statusId = tasksList[i].statusId,
+                statusName = "test_name2"
+            });
+        }
+        
+        Debug.WriteLine("checj sosog \n\n\n");
+        for (int i = 0; i < tasksList.Count; i++)
+        {
+            Debug.WriteLine(tasksList[i]);
+        }
+        return taskResponseDtos;
     }
 
     public async Task<List<Task>> GetOnWeekAsync()
