@@ -6,4 +6,5 @@ public class TaskDto
     public string taskName { get; set; }
     public int maxScore { get; set; }
     public DateTime deadline { get; set; }
+    public string statusId { get; set; }
 }

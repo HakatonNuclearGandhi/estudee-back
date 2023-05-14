@@ -20,9 +20,10 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IStatusRepository, SQLStatusRepository>();
-builder.Services.AddScoped<IDashboardRepository, SQLDashboardRepository>();
-builder.Services.AddScoped<ITaskRepository, SQLTaskRepository>();
 builder.Services.AddScoped<ISubjectRepository, SQLSubjectRepository>();
+builder.Services.AddScoped<ITaskRepository, SQLTaskRepository>();
+builder.Services.AddScoped<IDashboardRepository, SQLDashboardRepository>();
+
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 builder.Services.AddAuthentication(options =>
