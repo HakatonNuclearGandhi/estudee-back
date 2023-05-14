@@ -1,12 +1,10 @@
-﻿namespace api.Models.Domain;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class User
+namespace api.Models.Domain;
+
+public class User: IdentityUser
 {
-    public Guid userId { get; set; }
+    public string? RefreshToken { get; set; }
 
-    public string userName { get; set; }
-
-    public string email { get; set; }
-
-    public string passwod { get; set; }
+    public DateTime RefreshTokenExpiryTime { get; set; }
 }
