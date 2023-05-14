@@ -61,6 +61,11 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseCors(options =>
+    options.WithOrigins("http://localhost:3000", "https://estudee-front-kthurli79-moodiverse.vercel.app/", "https://estudee-front.vercel.app")
+        .AllowAnyMethod()
+        .AllowAnyHeader());
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

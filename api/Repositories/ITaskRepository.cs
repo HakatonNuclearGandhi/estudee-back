@@ -15,7 +15,7 @@ public interface ITaskRepository
 
     Task<List<TaskResponseDto>> GetAllAsync(User user);
     
-    Task<List<Models.Domain.Task>> GetOnWeekAsync();
+    Task<List<TaskResponseDto>> GetOnWeekAsync(User user);
 
     Task<Models.Domain.Task>? UpdateAsync(Guid id, Models.Domain.Task task);
 }

@@ -17,5 +17,6 @@ public class AutoMapperProfiles : Profile
         CreateMap<Subject, GetSubjectNameDto>().ReverseMap();
         CreateMap<Subject, UpdateSubjectDto>().ReverseMap();
         CreateMap<Task, TaskResponseDto>().ReverseMap();
+        CreateMap<Status, CreateStatusDto>().ReverseMap();
     }
 }

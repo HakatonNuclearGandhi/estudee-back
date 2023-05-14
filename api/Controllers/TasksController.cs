@@ -68,7 +68,18 @@ public class TasksController : ControllerBase
     [Route("OnWeek")]
     public async Task<IActionResult> GetAllOnWeekAsync()
     {
-        var tasksDom = await _taskRepository.GetOnWeekAsync();
+        string? accessToken = await HttpContext.GetTokenAsync("Bearer", "access_token");
+
+        var principal = GetPrincipalFromExpiredToken(accessToken);
+        if (principal == null)
+        {
+            return BadRequest("Invalid access token or refresh token");
+        }
+
+        string username = principal.Identity.Name;
+        User user = await _userManager.FindByNameAsync(username);
+        
+        var tasksDom = await _taskRepository.GetOnWeekAsync(user);
         var tasksDto = _mapper.Map<List<TaskDto>>(tasksDom);
         return Ok(tasksDto);
     }
