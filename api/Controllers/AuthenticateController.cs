@@ -39,7 +39,7 @@ namespace api.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequestDto model)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-            
+
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
@@ -75,12 +75,15 @@ namespace api.Controllers
 
             return Unauthorized();
         }
-        
+
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDto model)
         {
-            var userExists = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == model.Email); ;
+            var userExists =
+                await _userManager.Users.FirstOrDefaultAsync(
+                    u => u.Email == model.Email || u.UserName == model.Username);
+            ;
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new ResponseDto { Status = "Error", Message = "User already exists!" });
@@ -104,7 +107,7 @@ namespace api.Controllers
 
             return Ok(new ResponseDto { Status = "Success", Message = "User created successfully!" });
         }
-        
+
         [HttpPost]
         [Route("refresh-token")]
         public async Task<IActionResult> RefreshToken(TokenDto tokenModel)
@@ -148,7 +151,7 @@ namespace api.Controllers
                 refreshToken = newRefreshToken
             });
         }
-        
+
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
@@ -164,7 +167,7 @@ namespace api.Controllers
 
             return token;
         }
-        
+
         private static string GenerateRefreshToken()
         {
             var randomNumber = new byte[64];
