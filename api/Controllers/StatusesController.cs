@@ -4,6 +4,7 @@ using api.Models.DTO;
 using api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers;
 
@@ -20,6 +21,7 @@ public class StatusesController : ControllerBase
         _mapper = mapper;
     }
     
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
