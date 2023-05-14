@@ -18,4 +18,12 @@ public class SQLStatusRepository : IStatusRepository
 
         return await statuses.ToListAsync();
     }
+
+    public async Task<Status> Create(Status status)
+    {
+        await _dbContext.Status.AddAsync(status);
+        await _dbContext.SaveChangesAsync();
+
+        return status;
+    }
 }

@@ -29,4 +29,14 @@ public class StatusesController : ControllerBase
         var statusesDto = _mapper.Map<List<StatusDto>>(statusesDom);
         return Ok(statusesDto);
     }
+    
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateStatusDto model)
+    {
+        var status = _mapper.Map<Status>(model);
+        var statusesDom = await _statusRepository.GetAllAsync();
+        var statusesDto = _mapper.Map<List<StatusDto>>(statusesDom);
+        return Ok(statusesDto);
+    }
 }

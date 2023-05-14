@@ -15,7 +15,7 @@ public class SQLTaskRepository : ITaskRepository
     {
         _dbContext = dbContext;
     }
-    
+
     public async Task<Task> CreateAsync(Task task)
     {
         await _dbContext.Tasks.AddAsync(task);
@@ -33,7 +33,7 @@ public class SQLTaskRepository : ITaskRepository
     public async Task<Task>? DeleteAsync(Guid id)
     {
         var exist = await _dbContext.Tasks.FirstOrDefaultAsync(x => x.taskId == id);
-        
+
         if (exist == null)
         {
             return null;
@@ -47,14 +47,7 @@ public class SQLTaskRepository : ITaskRepository
 
     public async Task<List<TaskResponseDto>> GetAllAsync(User user)
     {
-        var tasks = _dbContext.Tasks.AsQueryable();
         List<Subject> listSub = await _dbContext.Subjects.Where(s => s.User == user).ToListAsync();
-        Debug.WriteLine("checj sosog \n\n\n");
-        for (int i = 0; i < listSub.Count; i++)
-        {
-            Debug.WriteLine(listSub[i]);
-        }
-        
         List<Task> tasksList = new();
         foreach (var sub in listSub)
         {
@@ -76,27 +69,44 @@ public class SQLTaskRepository : ITaskRepository
                 statusName = "test_name2"
             });
         }
-        
-        Debug.WriteLine("checj sosog \n\n\n");
-        for (int i = 0; i < tasksList.Count; i++)
-        {
-            Debug.WriteLine(tasksList[i]);
-        }
+
         return taskResponseDtos;
     }
 
-    public async Task<List<Task>> GetOnWeekAsync()
+    public async Task<List<TaskResponseDto>> GetOnWeekAsync(User user)
     {
-        var tasks = _dbContext.Tasks.AsQueryable();
+        List<Subject> listSub = await _dbContext.Subjects.Where(s => s.User == user).ToListAsync();
+        List<Task> tasksList = new();
+        foreach (var sub in listSub)
+        {
+            List<Task> tList = await _dbContext.Tasks.Where(t =>
+                t.subjectId == sub.subjectId && t.deadLine > DateTime.Now &&
+                t.deadLine <= DateTime.Now.AddDays(7)).ToListAsync();
+            tasksList.AddRange(tList);
+        }
 
-        return await tasks.Where(t => t.deadLine > DateTime.Now && 
-                                      t.deadLine <= DateTime.Now.AddDays(7)).ToListAsync();
+        List<TaskResponseDto> taskResponseDtos = new List<TaskResponseDto>();
+        for (int i = 0; i < tasksList.Count; i++)
+        {
+            taskResponseDtos.Add(new TaskResponseDto()
+            {
+                subjectId = tasksList[i].subjectId,
+                subjectName = "test_name",
+                maxScore = tasksList[i].maxScore,
+                taskName = tasksList[i].taskName,
+                deadline = tasksList[i].deadLine,
+                statusId = tasksList[i].statusId,
+                statusName = "test_name2"
+            });
+        }
+
+        return taskResponseDtos;
     }
 
     public async Task<Task>? UpdateAsync(Guid id, Task task)
     {
         var exist = await _dbContext.Tasks.FirstOrDefaultAsync(x => x.taskId == id);
-        
+
         if (exist == null)
         {
             return null;
